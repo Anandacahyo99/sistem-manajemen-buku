@@ -17,16 +17,16 @@ export async function GET(
     const session = await getSession(request);
     if (!session) return errorResponse("Unauthorized", 401);
 
-    const book = await prisma.book.findUnique({
+    const grade = await prisma.grade.findUnique({
       where: { id },
       include: { user: { select: { name: true } } }
     });
 
-    if (!book) {
+    if (!grade) {
       return errorResponse("Buku tidak ditemukan", 404);
     }
 
-    return successResponse(book, "Detail buku ditemukan");
+    return successResponse(grade, "Detail buku ditemukan");
 
   } catch (error) {
     return errorResponse("Server Error", 500, error);
@@ -44,22 +44,23 @@ export async function PATCH(
     if (!session) return errorResponse("Unauthorized", 401);
 
     // Cek dulu barangnya ada gak?
-    const existingBook = await prisma.book.findUnique({ where: { id } });
-    if (!existingBook) return errorResponse("Buku tidak ditemukan", 404);
+    const existinggrade = await prisma.grade.findUnique({ where: { id } });
+    if (!existinggrade) return errorResponse("Buku tidak ditemukan", 404);
 
     // Ambil data update
     const body = await request.json();
     
-    const updatedBook = await prisma.book.update({
+    const updatedgrade = await prisma.grade.update({
       where: { id },
       data: {
-        title: body.title,
-        year: body.year ? Number(body.year) : undefined,
-        description: body.description
+        subject: body.subject,
+        score: body.score,
+        sks: body.sks ? Number(body.sks) : undefined,
+        semester: body.semester ? Number(body.semester) : undefined
       }
     });
 
-    return successResponse(updatedBook, "Buku berhasil diupdate");
+    return successResponse(updatedgrade, "Buku berhasil diupdate");
 
   } catch (error) {
     return errorResponse("Gagal update buku", 500, error);
@@ -79,17 +80,17 @@ export async function DELETE(
     if (!session) return errorResponse("Unauthorized", 401);
 
     // B. CEK ROLE (PROTEKSI ADMIN)
-    // Middleware meloloskan /api/books/*, jadi kita harus cegat di sini
+    // Middleware meloloskan /api/grades/*, jadi kita harus cegat di sini
     if (session.role !== "ADMIN") {
       return errorResponse("Forbidden: Hanya Admin yang boleh menghapus data!", 403);
     }
 
     // C. Cek Barang
-    const existingBook = await prisma.book.findUnique({ where: { id } });
-    if (!existingBook) return errorResponse("Buku tidak ditemukan", 404);
+    const existinggrade = await prisma.grade.findUnique({ where: { id } });
+    if (!existinggrade) return errorResponse("Buku tidak ditemukan", 404);
 
     // D. Hapus
-    await prisma.book.delete({ where: { id } });
+    await prisma.grade.delete({ where: { id } });
 
     return successResponse(null, "Buku berhasil dihapus permanen");
 

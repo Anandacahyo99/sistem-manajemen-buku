@@ -31,7 +31,8 @@ model User {
   // @default(USER) artinya: Kalau tidak diisi, otomatis jadi USER biasa.
   role     Role     @default(USER)
   // Relasi: Satu user punya banyak buku
-  books     Book[]   
+  grades       Grade[]
+    
 
   refreshToken String?  @db.Text
   
@@ -40,11 +41,15 @@ model User {
 
 //2.tabel buku
 
-model Book {
+model Grade {
   id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  year        Int
+
+  // Data Akademik
+  subject     String   // Nama Mata Kuliah (Ex: "Pemrograman Web")
+  score       String   // Nilai Huruf/Angka (Ex: "A", "85")
+  sks         Int      // Bobot SKS (Ex: 3)
+  semester    Int      // Semester berapa (Ex: 5)
+ 
   
   // Relasi: Buku ini milik siapa?
   userId      Int
