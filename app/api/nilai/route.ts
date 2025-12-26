@@ -72,8 +72,8 @@ export async function POST(request: Request) {
       },
     });
 
-    return successResponse(newgrade, "Buku berhasil dibuat", 201);
+    return successResponse(newgrade, "Data berhasil dibuat", 201);
   } catch (error) {
-    return errorResponse("Gagal membuat buku", 500, error);
+    return errorResponse("Data membuat buku", 500, error);
   }
 }

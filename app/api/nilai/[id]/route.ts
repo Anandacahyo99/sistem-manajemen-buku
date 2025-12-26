@@ -23,10 +23,10 @@ export async function GET(
     });
 
     if (!grade) {
-      return errorResponse("Buku tidak ditemukan", 404);
+      return errorResponse("Data tidak ditemukan", 404);
     }
 
-    return successResponse(grade, "Detail buku ditemukan");
+    return successResponse(grade, "Detail data ditemukan");
 
   } catch (error) {
     return errorResponse("Server Error", 500, error);
@@ -45,7 +45,7 @@ export async function PATCH(
 
     // Cek dulu barangnya ada gak?
     const existinggrade = await prisma.grade.findUnique({ where: { id } });
-    if (!existinggrade) return errorResponse("Buku tidak ditemukan", 404);
+    if (!existinggrade) return errorResponse("data tidak ditemukan", 404);
 
     // Ambil data update
     const body = await request.json();
@@ -60,10 +60,10 @@ export async function PATCH(
       }
     });
 
-    return successResponse(updatedgrade, "Buku berhasil diupdate");
+    return successResponse(updatedgrade, "Data berhasil diupdate");
 
   } catch (error) {
-    return errorResponse("Gagal update buku", 500, error);
+    return errorResponse("Gagal update data", 500, error);
   }
 }
 
@@ -87,12 +87,12 @@ export async function DELETE(
 
     // C. Cek Barang
     const existinggrade = await prisma.grade.findUnique({ where: { id } });
-    if (!existinggrade) return errorResponse("Buku tidak ditemukan", 404);
+    if (!existinggrade) return errorResponse("Data tidak ditemukan", 404);
 
     // D. Hapus
     await prisma.grade.delete({ where: { id } });
 
-    return successResponse(null, "Buku berhasil dihapus permanen");
+    return successResponse(null, "Data berhasil dihapus permanen");
 
   } catch (error) {
     return errorResponse("Gagal menghapus data", 500, error);
